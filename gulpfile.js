@@ -1,15 +1,19 @@
-const gulp = require('gulp');
-const sass = require('gulp-sass');
-const browserSync = require('browser-sync');
-const useref = require('gulp-useref');
-const jshint = require('jshint');
-const uglify = require('gulp-uglify-es').default;
-const gulpIf = require('gulp-if');
-const cssnano = require('gulp-cssnano');
-const imagemin = require('gulp-imagemin');
-const cache = require('gulp-cache');
-const del = require('del');
-const runSequence = require('run-sequence');
+const gulp = require('gulp'),
+    sass = require('gulp-sass'),
+    browserSync = require('browser-sync'),
+    useref = require('gulp-useref'),
+    jshint = require('gulp-jshint'),
+    uglify = require('gulp-uglify-es').default,
+    gulpIf = require('gulp-if'),
+    cssnano = require('gulp-cssnano'),
+    imagemin = require('gulp-imagemin'),
+    cache = require('gulp-cache'),
+    del = require('del'),
+    runSequence = require('run-sequence'),
+    sourcemaps = require('gulp-sourcemaps'),
+    concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
+    plumber = require('gulp-plumber');
 
 // Basic Gulp task syntax
 gulp.task('hello', function () {
@@ -41,7 +45,27 @@ gulp.task('sass', function () {
 gulp.task('watch', function () {
     gulp.watch('app/scss/**/*.scss', ['sass']);
     gulp.watch('app/*.html', browserSync.reload);
-    gulp.watch('app/js/**/*.js', browserSync.reload);
+    gulp.watch('app/js/**/*.js', ['site-js']);
+});
+
+// JSHint, concat, and minify JavaScript
+gulp.task('site-js', function () {
+    return gulp.src([
+
+        // Grab your custom scripts
+        './app/js/lib/*.js'
+
+    ])
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('./app/js'))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(uglify())
+        .pipe(sourcemaps.write('.')) // Creates sourcemap for minified JS
+        .pipe(gulp.dest('./app/js'))
 });
 
 // Optimization Tasks 

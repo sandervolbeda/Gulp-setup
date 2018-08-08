@@ -1,6 +1,5 @@
-# Gulp Starter for CSS Tricks Tutorial  
-
-This repo is a gulp starter for this CSS Tricks tutorial.
+# Gulp Starter
+This repo is a gulp starter for any SCSS/JavaScript (ES6 supported) project.
 
 ###### Make sure to have Gulp install globally. If you don't have Gulp yet, run `npm install gulp -g` to install it
 
